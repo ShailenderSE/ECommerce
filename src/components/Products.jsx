@@ -5,6 +5,7 @@ import Filters from "./Filters.jsx";
 import { useState } from "react";
 
 const fetchProducts = async ({ queryKey }) => {
+  console.log(queryKey);
   const [key, filters] = queryKey;
 
   let url = "https://fakestoreapi.com/products";
