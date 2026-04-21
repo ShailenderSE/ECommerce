@@ -14,7 +14,10 @@ const fetchProducts = async ({ queryKey }) => {
     if (filters.category) {
       url += `/category/${filters.category}`;
     }
-
+    if (filters.sort) {
+      url += `?sort=${filters.sort}`;
+    }
+    console.log(url);
     const { data } = await axios.get(url);
     return data;
   } catch (error) {
@@ -23,7 +26,7 @@ const fetchProducts = async ({ queryKey }) => {
 };
 
 export default function Products() {
-  const [filters, setFilters] = useState({ category: "" });
+  const [filters, setFilters] = useState({ category: "", sort: "asc" });
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["products", filters],
@@ -34,10 +37,9 @@ export default function Products() {
 
   if (error) return <div>Error when fetching the products...</div>;
 
-  //console.log("response " + data.data[0]["_id"]);
   return (
     <main className="grow flex bg-gray-100">
-      <Filters onFilter={setFilters} />
+      <Filters filters={filters} onFilter={setFilters} />
       <ProductGrid products={data} />
     </main>
   );

@@ -14,7 +14,7 @@ const fetchCategories = async () => {
   }
 };
 
-export default function Filters({ onFilter }) {
+export default function Filters({ filters, onFilter }) {
   const { data, error, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
@@ -25,25 +25,46 @@ export default function Filters({ onFilter }) {
 
   if (error) return <div>Error while fetching categories</div>;
 
-  //console.log("stamta " + data.data[0]["name"]);
   return (
     <aside className="w-1/4 p-4 bg-white pb-4">
-      <h2 className="text-lg font-semibold mb-4 ">Filters</h2>
+      <div>
+        <h3 className="text-lg font-semibold">Sort by</h3>
+        <select
+          value={filters.sort}
+          className="w-full p-2 rounded-md"
+          onChange={(e) =>
+            onFilter((prev) => ({ ...prev, sort: e.target.value }))
+          }
+        >
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
       <div>
         <h3 className="text-lg font-semibold mb-4 ">Categories</h3>
 
         <div className="flex flex-wrap gap-2">
           <button
-            className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
-            onClick={() => onFilter({ category: "" })}
+            className={`px-3 py-1 rounded-full capitalize ${
+              filters.category === ""
+                ? "bg-blue-600 text-white"
+                : ' bg-gray-200 hover:bg-gray-300"'
+            }`}
+            onClick={() => onFilter((prev) => ({ ...prev, category: "" }))}
           >
             All Products
           </button>
           {data.map((category) => (
             <button
               key={category}
-              className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
-              onClick={() => onFilter({ category })}
+              className={`px-3 py-1 rounded-full capitalize ${
+                filters.category === category
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+              onClick={() =>
+                onFilter((prev) => ({ ...prev, category: category }))
+              }
             >
               {category}
             </button>
